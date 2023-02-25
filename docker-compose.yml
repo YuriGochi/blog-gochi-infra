@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  ui: 
+    image: yurigochi/bloggochimain
+    networks:
+      - app
+  api: 
+    image: yurigochi/bloggochiapi
+    networks:
+      - app
+  db: 
+    image: mongo
+    networks:
+      - app
+    volumes:
+      - ./data:/data/db
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - "ui"
+    networks:
+      - app
+networks:
+  app: 
+
+  
